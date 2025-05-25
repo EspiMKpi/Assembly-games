@@ -619,9 +619,9 @@
         MOV DL, [OBSTACLES_COORDS_X + SI]             ; Lay X moi tu mang
         INT 10h
         
-        MOV AH, 0Eh
-        MOV AL, 30
-        INT 10h
+        MOV AH, 02h
+        MOV DL, 'x'
+        INT 21h
 
         INC SI
         LOOP DRAW_OBSTACLES_LOOP 
@@ -728,17 +728,21 @@
         MOV BL, [OBSTACLES_COORDS_Y + DI]           ; Lay Y cua chuong ngai vat hien tai
         CMP AL, BL
         JNE OBSTACLES_INC                           ; Kiem tra chuong ngai vat tiep theo neu khong va cham
-
+        
+        POP DI
+        POP SI
+        POP CX
+        POP BX
+        POP AX
         JMP GAME_OVER_BY_DEATH
 
     ; Tang index cua DI
     OBSTACLES_INC:
         XOR AH, AH
         MOV AL, MAX_OBSTACLES
-        DEC AX
         INC DI
         CMP DI, AX
-        JE NEXT_BALLOON_CHECK
+        JGE NEXT_BALLOON_CHECK
         JMP OBSTACLES_CHECK_LOOP
 
     ADD_SCORE_CHECK:
@@ -765,7 +769,7 @@
         INC SI
         LOOP CHECK_LOOP  
         
-    NO_COLLISION_FOUND: 
+    NO_COLLISION_FOUND:
         ; Neu khong co va cham nao trong vong lap
         POP DI
         POP SI
